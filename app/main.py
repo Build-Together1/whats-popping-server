@@ -15,7 +15,10 @@ from app.apis.auth.routes import auth_router
 from app.apis.users.corporate.routes import corporate_router
 from app.apis.users.individual.routes import individual_router
 from app.exceptions.base_exception import BusinessException, CredentialsException
-from app.database.session import get_db
+from app.database.session import get_db, engine
+from app.database import models
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="What's Popping Event Platform API",
