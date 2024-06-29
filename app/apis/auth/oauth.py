@@ -45,7 +45,11 @@ async def homepage(request: Request):
             '<a href="/logout">logout</a>'
         )
         return HTMLResponse(html)
-    return HTMLResponse('<a href="/login">login</a>')
+    return HTMLResponse(
+        "<h1>Welcome to what's popping</h1>"
+        "<br><br>"
+        '<a href="/login">login</a>'
+    )
 
 
 @google_auth_router.get("/login")
