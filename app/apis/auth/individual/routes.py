@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, BackgroundTasks
 
 from app.apis.auth.schemas import UserLogin
 from app.apis.auth.schemas import (
@@ -27,27 +27,37 @@ async def individual_account_verify_email(req: VerifyEmail, db: db_dependency):
 
 
 @individual_auth_router.post("/individual-account-generate-otp")
-async def individual_account_otp_for_email_verification(req: GenerateOtp, db: db_dependency):
-    return await IndividualUserAccount.otp_for_email_verification(req, db)
+async def individual_account_otp_for_email_verification(
+        req: GenerateOtp, db: db_dependency,  background_tasks: BackgroundTasks
+):
+    return await IndividualUserAccount.otp_for_email_verification(req, db, background_tasks)
 
 
 @individual_auth_router.patch("/individual-account-change_password")
-async def individual_account_change_password(req: ChangePassword, db: db_dependency, current_user: auth_dependency):
-    return await IndividualUserAccount.change_account_password(req, db, current_user)
+async def individual_account_change_password(
+        req: ChangePassword, db: db_dependency, current_user: auth_dependency,  background_tasks: BackgroundTasks
+):
+    return await IndividualUserAccount.change_account_password(req, db, current_user, background_tasks)
 
 
 @individual_auth_router.post("/individual-account-reset_password")
-async def individual_account_reset_password(req: PasswordResetIn, db: db_dependency):
-    return await IndividualUserAccount.account_reset_otp(req, db)
+async def individual_account_reset_password(
+        req: PasswordResetIn, db: db_dependency,  background_tasks: BackgroundTasks
+):
+    return await IndividualUserAccount.account_reset_otp(req, db, background_tasks)
 
 
 @individual_auth_router.patch("/individual-account-confirm_password_reset")
-async def individual_account_confirm_password_reset(req: PasswordResetConfirmation, db: db_dependency):
+async def individual_account_confirm_password_reset(
+        req: PasswordResetConfirmation, db: db_dependency
+):
     return await IndividualUserAccount.account_password_reset(req, db)
 
 
 @individual_auth_router.post("/disable-individual-account", status_code=status.HTTP_200_OK)
-async def disable_individual_account(req: DisableAccount, db: db_dependency, current_user: auth_dependency):
+async def disable_individual_account(
+        req: DisableAccount, db: db_dependency, current_user: auth_dependency
+):
     return await IndividualUserAccount.disable_account(req, db, current_user)
 
 

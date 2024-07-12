@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Deactivation/Deletion</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: 20px auto; padding: 20px; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; }
+        .header { text-align: center; border: 1px solid #808080; background-color: #808080; color: #fff; padding: 10px; }
+        .footer { text-align: center; font-size: 12px; color: gray; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Account Deactivation/Deletion</h1>
+        </div>
+        <p>Dear {{ username }},</p>
+        <p>Your request to deactivate/delete your account on What's Popping has been processed.</p>
+        <p>If you deactivated your account, you can reactivate it by logging in again. If you deleted your account, please note that this action is irreversible.</p>
+        <p>We are sad to see you go. If you have any feedback, please let us know.</p>
+        <p>Best regards,<br>What's Popping Team</p>
+        <div class="footer">
+            <p>&copy; 2024 What's Popping. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

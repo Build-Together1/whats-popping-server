@@ -2,8 +2,10 @@ from datetime import timedelta, datetime
 
 from fastapi import HTTPException, status
 
+from app.config import env
 from . import crud
 from .. import utils
+from ..email import send_email_background
 from ..models import PasswordReset
 from ..utils import generate_otp, Password
 
@@ -29,7 +31,7 @@ class CorporateUserAccount:
         return {"msg": "Email verified"}
 
     @staticmethod
-    async def otp_for_email_verification(req, db):
+    async def otp_for_email_verification(req, db, background_tasks):
         account = crud.get_account_by_email(req, db)
         if not account:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
@@ -40,13 +42,18 @@ class CorporateUserAccount:
 
         await crud.save_otp_to_db(generated_otp, expires_in, db)
 
+        template = env.get_template("welcome_email.html")
+        html_body = template.render(username=account.first_name)
+
+        send_email_background(background_tasks, "What's Popping Account Verification", account.email_address, html_body)
+
         return {
             "message": f"Your otp has been generated successfully. "
                        f"Verify your account by inputting {generated_otp}"
         }
 
     @staticmethod
-    async def change_account_password(req, db, current_user):
+    async def change_account_password(req, db, current_user, background_tasks):
         if not current_user:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
 
@@ -66,10 +73,15 @@ class CorporateUserAccount:
 
         await crud.save_password_to_db(account, password, confirm_password, db)
 
+        template = env.get_template("password_change.html")
+        html_body = template.render(username=account.first_name)
+
+        send_email_background(background_tasks, "What's Popping", account.email_address, html_body)
+
         return {"msg": "Password changed successfully"}
 
     @staticmethod
-    async def account_reset_otp(req, db):
+    async def account_reset_otp(req, db, background_tasks):
         account = crud.get_account_by_email(req, db)
         if not account:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
@@ -83,6 +95,11 @@ class CorporateUserAccount:
         reset_code.expires_in = expires_in
 
         await crud.save_reset_code_to_db(reset_code, db)
+
+        template = env.get_template("password_reset.html")
+        html_body = template.render(username=account.first_name, otp=generated_otp)
+
+        send_email_background(background_tasks, "What's Popping", account.email_address, html_body)
 
         return {
             "message": f"Your otp has been generated successfully. "
@@ -132,4 +149,5 @@ class CorporateUserAccount:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
         await crud.save_enabled_account_to_db(account, db)
+
         return {"message": "User enabled successfully"}

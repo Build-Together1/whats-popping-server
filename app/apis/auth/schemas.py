@@ -1,6 +1,6 @@
 from typing import List, Dict, Any
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 
 class Account(BaseModel):
@@ -23,11 +23,6 @@ class UserLogin(BaseModel):
     id: str
     email_address: EmailStr
     password: str
-
-
-class EmailSchema(BaseModel):
-    email: List[EmailStr]
-    # body: Dict[str, Any]
 
 
 class VerifyEmail(BaseModel):

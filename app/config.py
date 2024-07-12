@@ -1,5 +1,12 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+import os
 from functools import lru_cache
+
+from jinja2 import Environment, FileSystemLoader
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+templates_dir = os.path.join(os.path.dirname(__file__), "templates")
+
+env = Environment(loader=FileSystemLoader(templates_dir))
 
 
 class Settings(BaseSettings):
@@ -33,10 +40,11 @@ class Settings(BaseSettings):
     MAIL_FROM: str
     MAIL_PORT: int
     MAIL_SERVER: str
-    MAIL_TLS: bool
-    MAIL_SSL: bool
+    MAIL_FROM_NAME: str
+    MAIL_STARTTLS: bool
+    MAIL_SSL_TLS: bool
     USE_CREDENTIALS: bool
-    VALIDATE_CERTS: bool
+    TEMPLATE_FOLDER: str
 
     # APP CONFIG
 
@@ -51,8 +59,3 @@ def get_settings() -> Settings:
 
 
 settings = get_settings()
-
-
-
-
-

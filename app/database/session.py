@@ -7,10 +7,6 @@ from sqlalchemy.orm import sessionmaker, Session
 
 from ..config import settings
 
-# SQLALCHEMY_DATABASE_URL = "postgresql://postgres:ignite@localhost/poppingDB"
-
-# settings = get_settings()
-
 SQLALCHEMY_DATABASE_URL = f"postgresql://{settings.DB_USERNAME}:" \
                           f"{settings.DB_PASSWORD}@{settings.DB_HOSTNAME}" \
                           f":{settings.DB_PORT}/{settings.DB_NAME}"
