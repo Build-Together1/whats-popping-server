@@ -1,7 +1,5 @@
 from typing import Annotated
-
 from fastapi import APIRouter, status, Depends, BackgroundTasks
-
 from app.apis.auth.schemas import UserLogin
 from app.apis.auth.schemas import (
     VerifyEmail,
@@ -22,8 +20,10 @@ auth_dependency = Annotated[UserLogin, Depends(get_current_active_individual_acc
 
 
 @individual_auth_router.post("/individual-account-verify-email")
-async def individual_account_verify_email(req: VerifyEmail, db: db_dependency):
-    return await IndividualUserAccount.verify_email(req, db)
+async def individual_account_verify_email(
+        req: VerifyEmail, db: db_dependency, background_tasks: BackgroundTasks
+):
+    return await IndividualUserAccount.verify_email(req, db, background_tasks)
 
 
 @individual_auth_router.post("/individual-account-generate-otp")
@@ -42,16 +42,16 @@ async def individual_account_change_password(
 
 @individual_auth_router.post("/individual-account-reset_password")
 async def individual_account_reset_password(
-        req: PasswordResetIn, db: db_dependency,  background_tasks: BackgroundTasks
+        req: PasswordResetIn, db: db_dependency, background_tasks: BackgroundTasks
 ):
     return await IndividualUserAccount.account_reset_otp(req, db, background_tasks)
 
 
 @individual_auth_router.patch("/individual-account-confirm_password_reset")
 async def individual_account_confirm_password_reset(
-        req: PasswordResetConfirmation, db: db_dependency
+        req: PasswordResetConfirmation, db: db_dependency, background_tasks: BackgroundTasks
 ):
-    return await IndividualUserAccount.account_password_reset(req, db)
+    return await IndividualUserAccount.account_password_reset(req, db, background_tasks)
 
 
 @individual_auth_router.post("/disable-individual-account", status_code=status.HTTP_200_OK)

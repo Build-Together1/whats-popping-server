@@ -7,7 +7,7 @@
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
         .container { max-width: 600px; margin: 20px auto; padding: 20px; background-color: #fff; border: 1px solid #ddd; border-radius: 8px; }
-        .header { text-align: center; border: 1px solid #4CAF50; background-color: #4CAF50; color: #fff; padding: 10px; }
+        .header { text-align: center; border: 1px solid #4CAF50; background-color: #0000FF; color: #fff; padding: 10px; }
         .footer { text-align: center; font-size: 12px; color: gray; }
         .otp { font-size: 24px; font-weight: bold; letter-spacing: 8px; text-align: center; margin: 20px 0; }
     </style>
@@ -19,8 +19,7 @@
         </div>
         <p>Dear {{ username }},</p>
         <p>Thank you for registering on What's Popping. Whether you are here to create amazing events or discover them, we are excited to have you on board.</p>
-        <p>Get started by exploring our platform and connecting with other event enthusiasts.</p>
-        <p>Please verify your email address by entering the following OTP:</p>
+        <p>To get started exploring our platform and connecting with other event enthusiasts, kindly verify your email address by entering the following OTP:</p>
         <div class="otp">{{ otp }}</div>
         <p>Best regards,<br>What's Popping Team</p>
         <div class="footer">

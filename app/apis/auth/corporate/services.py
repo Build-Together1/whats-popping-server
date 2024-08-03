@@ -12,7 +12,7 @@ from ..utils import generate_otp, Password
 
 class CorporateUserAccount:
     @staticmethod
-    async def verify_email(req, db):
+    async def verify_email(req, db, background_tasks):
         account = crud.get_account_by_email(req, db)
         if not account:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
@@ -27,6 +27,11 @@ class CorporateUserAccount:
                 raise HTTPException(status_code=404, detail="expired OTP")
 
         await crud.save_account_to_db(account, db)
+
+        template = env.get_template("account_activation.html")
+        html_body = template.render(username=account.first_name)
+
+        send_email_background(background_tasks, "What's Popping Account Verification", account.email_address, html_body)
 
         return {"msg": "Email verified"}
 
@@ -43,7 +48,7 @@ class CorporateUserAccount:
         await crud.save_otp_to_db(generated_otp, expires_in, db)
 
         template = env.get_template("welcome_email.html")
-        html_body = template.render(username=account.first_name)
+        html_body = template.render(username=account.first_name, otp=generated_otp)
 
         send_email_background(background_tasks, "What's Popping Account Verification", account.email_address, html_body)
 
@@ -76,7 +81,7 @@ class CorporateUserAccount:
         template = env.get_template("password_change.html")
         html_body = template.render(username=account.first_name)
 
-        send_email_background(background_tasks, "What's Popping", account.email_address, html_body)
+        send_email_background(background_tasks, "A password change on your What's Popping account", account.email_address, html_body)
 
         return {"msg": "Password changed successfully"}
 
@@ -99,7 +104,7 @@ class CorporateUserAccount:
         template = env.get_template("password_reset.html")
         html_body = template.render(username=account.first_name, otp=generated_otp)
 
-        send_email_background(background_tasks, "What's Popping", account.email_address, html_body)
+        send_email_background(background_tasks, "Reset Password", account.email_address, html_body)
 
         return {
             "message": f"Your otp has been generated successfully. "
@@ -107,7 +112,7 @@ class CorporateUserAccount:
         }
 
     @staticmethod
-    async def account_password_reset(req, db):
+    async def account_password_reset(req, db, background_tasks):
         account = crud.get_account_by_email(req, db)
         if not account:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
@@ -127,6 +132,11 @@ class CorporateUserAccount:
         confirm_password = Password.hash_password(req.confirm_password)
 
         await crud.save_password_to_db(account, password, confirm_password, db)
+        template = env.get_template("password_change.html")
+        html_body = template.render(username=account.first_name)
+
+        send_email_background(background_tasks, "A password change on your What's Popping account",
+                              account.email_address, html_body)
 
         return {"msg": "Password reset successful"}
 
