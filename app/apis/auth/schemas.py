@@ -25,6 +25,11 @@ class UserLogin(BaseModel):
     password: str
 
 
+class AccountLogin(BaseModel):
+    email_address: EmailStr
+    password: str
+
+
 class VerifyEmail(BaseModel):
     otp: str
     email_address: EmailStr
