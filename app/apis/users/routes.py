@@ -12,7 +12,7 @@ from app.apis.auth.schemas import UserLogin
 from app.apis.auth.services import UserAccount
 from app.apis.auth.utils import generate_otp, Password, password_checker
 from app.apis.users.schemas import (
-    UserCreate, DeleteUser, ReadUser, UserPublic, UserUpdate, UpdateUser
+    UserCreate, DeleteUser, ReadUser, UserPublic, UserUpdate
 )
 from app.config import env
 from app.database.models import User, OTPCodes
@@ -22,6 +22,7 @@ from . import crud
 user_router = APIRouter(tags=["USERS ACCOUNT"])
 
 auth_dependency = Annotated[UserLogin, Depends(UserAccount.get_current_active_user)]
+
 
 
 @user_router.post(
@@ -42,9 +43,6 @@ async def create_user(
 
     if not req.username:
         req.username = req.name+ str(randint(100, 9999))
-
-    # if datetime.now - req.date_of_birth < 18:
-    #     raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="You must be above 18.")
 
     await password_checker(req.password, req.confirm_password)
 
@@ -100,30 +98,6 @@ async def read_user(user_id: ReadUser, db: db_dependency, current_user: auth_dep
     return user
 
 
-#
-# @user_router.post(
-#     "/users/events/{id}", status_code=status.HTTP_200_OK, response_model=UserWithEvents
-# )
-# async def read_user_with_events(user_id: ReadUser, db: db_dependency, current_user: auth_dependency):
-#     if not current_user:
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
-#     user = db.query(User).filter(User.id == user_id.id).first()
-#     if not user:
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist")
-#
-#     return user
-#
-#
-# @user_router.get(
-#     "/users/events", status_code=status.HTTP_200_OK, response_model=List[UserWithEvents]
-# )
-# async def get_all_users_with_events(db: db_dependency, current_user: auth_dependency):
-#     if not current_user:
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
-#     users = db.query(User).all()
-#
-#     return users
-
 
 @user_router.get(
     "/users/", status_code=status.HTTP_200_OK, response_model=List[UserPublic]
@@ -135,15 +109,6 @@ async def get_all_users(db: db_dependency, current_user: auth_dependency):
 
     return users
 
-# @user_router.patch(
-#     "/users/", status_code=status.HTTP_200_OK, response_model=List[UserPublic]
-# )
-# async def get_all_users(db: db_dependency, current_user: auth_dependency):
-#     if not current_user:
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
-#     users = db.query(User).all()
-#
-#     return users
 
 
 @user_router.patch("/users/{id}", response_model=UserPublic)
@@ -155,15 +120,14 @@ def update_user(user_id: UUID, req: UserUpdate, db: db_dependency, current_user:
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist")
 
-    # Update fields in the existing user object with values from the request
-    update_data = req.model_dump(exclude_unset=True)  # Only update fields provided in the request
+    update_data = req.model_dump(exclude_unset=True)
     for field, value in update_data.items():
         setattr(user, field, value)
 
     db.commit()
-    db.refresh(user)  # Refresh to get the updated user data from the DB
+    db.refresh(user)
 
-    return user  # Return the updated user
+    return user
 
 
 @user_router.delete(

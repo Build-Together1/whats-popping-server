@@ -20,28 +20,28 @@ auth_router = APIRouter(tags=["USER AUTHENTICATION & AUTHORIZATION"])
 
 auth_dependency = Annotated[UserLogin, Depends(UserAccount.get_current_active_user)]
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 # oauth2_scheme = OAuth2PasswordBearer(tokenUrl=settings.TOKEN_URL)
 
 
 @auth_router.post("/login")
 async def login_for_access_token(
         response: Response,
-        form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-        # user_login: AccountLogin,
+        # form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+        user_login: AccountLogin,
         db: db_dependency
 ):
-    # user = UserAccount.authenticate_user_account(
-    #     db=db,
-    #     email=user_login.email_address,
-    #     password=user_login.password
-    # )
-
     user = UserAccount.authenticate_user_account(
         db=db,
-        email=form_data.username,
-        password=form_data.password
+        email=user_login.email_address,
+        password=user_login.password
     )
+
+    # user = UserAccount.authenticate_user_account(
+    #     db=db,
+    #     email=form_data.username,
+    #     password=form_data.password
+    # )
     if user:
         return await UserAccount.login_account(response, user=user)
 

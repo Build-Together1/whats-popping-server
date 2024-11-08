@@ -23,12 +23,6 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     pass
 
-    # @model_validator(mode='before')
-    # def generate_username(cls, values):
-    #     if "username" not in values or not values["username"]:
-    #         values["username"] = values["name"]+ str(random.randint(100, 9999))
-    #         return  values
-
 
 class UserUpdate(UserBase):
     name: str | None = None

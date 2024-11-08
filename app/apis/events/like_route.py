@@ -29,16 +29,15 @@ async def like_event(event_id: UUID, db: db_dependency, current_user: auth_depen
     if existing_like:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Already liked")
 
-    # Add new like
+
     new_like = Likes(user_id=current_user.id, event_id=event_id, created_at=datetime.now(timezone.utc))
     db.add(new_like)
     db.commit()
     db.refresh(new_like)
 
-    # Return the like response
     return LikeResponse(user_id=current_user.id, event_id=event_id, created_at=new_like.created_at)
 
-# Unlike an Event
+
 @like_router.delete("/events/{event_id}/unlike", status_code=status.HTTP_204_NO_CONTENT, tags=["LIKES"])
 async def unlike_event(event_id: UUID, db: db_dependency, current_user: auth_dependency):
     if not current_user:
@@ -56,15 +55,12 @@ async def unlike_event(event_id: UUID, db: db_dependency, current_user: auth_dep
 # Get event details along with like count
 @like_router.get("/events/likes/{event_id}", response_model=EventWithLikes, tags=["LIKES"])
 async def get_event_with_likes(event_id: UUID, db: db_dependency):
-    # Get the event details
     event = db.query(Events).filter_by(id=event_id).first()
     if not event:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Event not found")
 
-    # Get the like count
     like_count = db.query(Likes).filter_by(event_id=event_id).count()
 
-    # Return event details along with like count
     return EventWithLikes(id=event.id, event_name=event.event_name, event_description=event.event_description, like_count=like_count)
 
 
