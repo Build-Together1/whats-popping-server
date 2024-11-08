@@ -3,7 +3,7 @@ from typing import List, Dict, Any
 from pydantic import BaseModel, EmailStr, Field
 
 
-class Account(BaseModel):
+class User(BaseModel):
     email_address: EmailStr
 
 
@@ -14,9 +14,8 @@ class Token(BaseModel):
 
 
 class TokenData(BaseModel):
-    account_id: str
+    user_id: str
     email: EmailStr
-    role: str
 
 
 class UserLogin(BaseModel):
@@ -35,7 +34,7 @@ class VerifyEmail(BaseModel):
     email_address: EmailStr
 
 
-class PasswordResetIn(Account):
+class PasswordResetIn(User):
     pass
 
 
@@ -52,19 +51,19 @@ class ChangePassword(BaseModel):
     confirm_password: str
 
 
-class EnableAccount(Account):
+class EnableUser(User):
     pass
 
 
-class DisableAccount(Account):
+class DisableUser(User):
     pass
 
 
-class GenerateOtp(Account):
+class GenerateOtp(User):
     pass
 
 
-class DeleteAccount(Account):
+class DeleteUser(User):
     pass
 
 
@@ -74,7 +73,7 @@ class RefreshToken(BaseModel):
 
 
 class CreateToken(BaseModel):
-    account_id: str
+    user_id: str
     email_address: EmailStr
     access_token: str
     refresh_token: str

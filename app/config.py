@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_MINUTES: int
     OTP_CODE_LENGTH: int
     PASSWORD_LENGTH: int
-    TOKEN_URL: str
+    # TOKEN_URL: str
 
     # GOOGLE AUTH CONFIG
     CLIENT_ID: str

@@ -6,12 +6,12 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from starlette.middleware.sessions import SessionMiddleware
 
-from app.apis.auth.corporate.routes import corporate_auth_router
-from app.apis.auth.individual.routes import individual_auth_router
 from app.apis.auth.oauth import google_auth_router
 from app.apis.auth.routes import auth_router
-from app.apis.users.corporate.routes import corporate_router
-from app.apis.users.individual.routes import individual_router
+from app.apis.users.routes import user_router
+from app.apis.events.event_route import event_router
+from app.apis.events.comment_route import comment_router
+from app.apis.events.like_route import like_router
 from app.database import models
 from app.database.session import get_db, engine
 from app.exceptions.base_exception import BusinessException, CredentialsException
@@ -27,10 +27,11 @@ app = FastAPI(
 )
 app.include_router(google_auth_router)
 app.include_router(auth_router)
-app.include_router(individual_router)
-app.include_router(individual_auth_router)
-app.include_router(corporate_router)
-app.include_router(corporate_auth_router)
+app.include_router(user_router)
+app.include_router(event_router)
+app.include_router(comment_router)
+app.include_router(like_router)
+
 
 
 # app.openapi = lambda: custom_openapi(app)

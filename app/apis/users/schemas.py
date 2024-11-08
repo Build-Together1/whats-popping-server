@@ -1,72 +1,72 @@
-from pydantic import BaseModel, EmailStr, Field, UUID4
-from typing import Annotated
+import random
+from datetime import date
+from typing import List
+
+from pydantic import BaseModel, EmailStr, UUID4, model_validator
+
+from app.apis.events.schemas import EventPublic, CommentPublic
 
 
-class AccountBase(BaseModel):
-    first_name: str
-    last_name: str
+class UserBase(BaseModel):
+    name: str
     email_address: EmailStr
-    phone_number: str
-    state: str
-    country: str
+    date_of_birth: date
     password: str
     confirm_password: str
+    username: str
+    profile_header_path: str
+    profile_pic_path: str
+    location: str
+    website: str
 
 
-class IndividualAccountCreate(AccountBase):
+class UserCreate(UserBase):
     pass
 
+    # @model_validator(mode='before')
+    # def generate_username(cls, values):
+    #     if "username" not in values or not values["username"]:
+    #         values["username"] = values["name"]+ str(random.randint(100, 9999))
+    #         return  values
 
-class CorporateAccountCreate(AccountBase):
-    organization_name: str
-    organization_description: str
 
+class UserUpdate(UserBase):
+    name: str | None = None
+    profile_header_path: str | None = None
+    profile_pic_path: str | None = None
+    location: str | None = None
+    website: str | None = None
 
-class IndividualAccountResponse(IndividualAccountCreate):
-    id: UUID4
+class UserPublic(BaseModel):
+    name: str
+    email_address: EmailStr
+    date_of_birth: date
+    username: str
+    profile_header_path: str
+    profile_pic_path: str
+    location: str
+    website: str
+    is_active: bool
     is_verified: bool
 
     class Config:
         from_attributes = True
 
 
-class CorporateAccountResponse(CorporateAccountCreate):
-    id: UUID4
-    is_verified: bool
 
-    class Config:
-        from_attributes = True
-
-
-class DeleteAccount(BaseModel):
+class ReadUser(BaseModel):
     id: UUID4
 
+class DeleteUser(BaseModel):
+    id: UUID4
 
-class AccountRead(BaseModel):
+class UpdateUser(BaseModel):
     id: UUID4
 
 
-class IndividualAccountOut(BaseModel):
-    id: UUID4
-    first_name: str
-    last_name: str
-    email_address: EmailStr
-    phone_number: str
-    state: str
-    country: str
-    is_active: bool
-    is_verified: bool
 
 
-class CorporateAccountOut(BaseModel):
-    id: UUID4
-    first_name: str
-    last_name: str
-    email_address: EmailStr
-    phone_number: str
-    state: str
-    country: str
-    organization_name: str
-    organization_description: str
-    is_active: bool
-    is_verified: bool
+
+
+
+
