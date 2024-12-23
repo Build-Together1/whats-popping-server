@@ -26,7 +26,7 @@ auth_dependency = Annotated[UserLogin, Depends(UserAccount.get_current_active_us
 
 
 @user_router.post(
-    "/users/", status_code=status.HTTP_201_CREATED
+    "/users/", status_code=status.HTTP_201_CREATED, response_model=UserPublic
 )
 async def create_user(
         req: UserCreate,
