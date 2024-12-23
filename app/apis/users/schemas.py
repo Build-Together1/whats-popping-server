@@ -21,10 +21,11 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    pass
-
+    id: UUID4
+  
 
 class UserUpdate(UserBase):
+    id: UUID4
     name: str | None = None
     profile_header_path: str | None = None
     profile_pic_path: str | None = None
@@ -32,6 +33,7 @@ class UserUpdate(UserBase):
     website: str | None = None
 
 class UserPublic(BaseModel):
+    id: UUID4
     name: str
     email_address: EmailStr
     date_of_birth: date
