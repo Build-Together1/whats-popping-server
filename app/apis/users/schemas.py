@@ -21,7 +21,7 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    id: UUID4
+    pass
   
 
 class UserUpdate(UserBase):
