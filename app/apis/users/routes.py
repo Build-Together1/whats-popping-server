@@ -24,7 +24,6 @@ user_router = APIRouter(tags=["USERS ACCOUNT"])
 auth_dependency = Annotated[UserLogin, Depends(UserAccount.get_current_active_user)]
 
 
-
 @user_router.post(
     "/users/", status_code=status.HTTP_201_CREATED, response_model=UserPublic
 )
@@ -42,7 +41,7 @@ async def create_user(
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="This username is taken")
 
     if not req.username:
-        req.username = req.name+ str(randint(100, 9999))
+        req.username = req.name + str(randint(100, 9999))
 
     await password_checker(req.password, req.confirm_password)
 
@@ -79,10 +78,7 @@ async def create_user(
 
     send_email_background(background_tasks, "What's Popping Account Verification", user.email_address, html_body)
 
-    return [
-        {"message": "User registered successfully. Confirmation email will be sent shortly."},
-        user
-    ]
+    return user
 
 
 @user_router.post(
@@ -98,7 +94,6 @@ async def read_user(user_id: ReadUser, db: db_dependency, current_user: auth_dep
     return user
 
 
-
 @user_router.get(
     "/users/", status_code=status.HTTP_200_OK, response_model=List[UserPublic]
 )
@@ -108,7 +103,6 @@ async def get_all_users(db: db_dependency, current_user: auth_dependency):
     users = db.query(User).all()
 
     return users
-
 
 
 @user_router.patch("/users/{id}", response_model=UserPublic)
@@ -152,7 +146,7 @@ async def delete_user(user_id: DeleteUser, db: db_dependency, current_user: auth
 async def delete_users(db: db_dependency):
     users = db.query(User).all()
 
-    for user in  users:
+    for user in users:
         db.delete(user)
     db.commit()
 

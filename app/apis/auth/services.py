@@ -226,7 +226,7 @@ class UserAccount:
 
         generated_otp = generate_otp()
         created_at = datetime.now(timezone.utc)
-        expires_in = created_at + timedelta(minutes=2)
+        expires_in = created_at + timedelta(minutes=10)
 
         await crud.save_otp_to_db(generated_otp, expires_in, db)
 
@@ -276,7 +276,7 @@ class UserAccount:
 
         generated_otp = generate_otp()
         created_at = datetime.now(timezone.utc)
-        expires_in = created_at + timedelta(minutes=2)
+        expires_in = created_at + timedelta(minutes=10)
 
         reset_code = PasswordReset()
         reset_code.reset_code = generated_otp
