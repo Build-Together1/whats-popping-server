@@ -84,9 +84,7 @@ async def create_user(
 @user_router.post(
     "/users/{id}", status_code=status.HTTP_200_OK, response_model=UserPublic
 )
-async def read_user(user_id: ReadUser, db: db_dependency, current_user: auth_dependency):
-    if not current_user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
+async def read_user(user_id: ReadUser, db: db_dependency):
     user = db.query(User).filter(User.id == user_id.id).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist")
@@ -97,19 +95,14 @@ async def read_user(user_id: ReadUser, db: db_dependency, current_user: auth_dep
 @user_router.get(
     "/users/", status_code=status.HTTP_200_OK, response_model=List[UserPublic]
 )
-async def get_all_users(db: db_dependency, current_user: auth_dependency):
-    if not current_user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
+async def get_all_users(db: db_dependency):
     users = db.query(User).all()
 
     return users
 
 
 @user_router.patch("/users/{id}", response_model=UserPublic)
-def update_user(user_id: UUID, req: UserUpdate, db: db_dependency, current_user: auth_dependency):
-    if not current_user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
-
+def update_user(user_id: UUID, req: UserUpdate, db: db_dependency):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist")
@@ -127,9 +120,7 @@ def update_user(user_id: UUID, req: UserUpdate, db: db_dependency, current_user:
 @user_router.delete(
     "/users/{id}", status_code=status.HTTP_200_OK
 )
-async def delete_user(user_id: DeleteUser, db: db_dependency, current_user: auth_dependency):
-    if not current_user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
+async def delete_user(user_id: DeleteUser, db: db_dependency):
     user = db.query(User).filter(User.id == user_id.id)
     if not user.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist")
