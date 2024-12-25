@@ -81,7 +81,7 @@ async def create_user(
     return user
 
 
-@user_router.post(
+@user_router.get(
     "/users/{id}", status_code=status.HTTP_200_OK, response_model=UserPublic
 )
 async def read_user(user_id: ReadUser, db: db_dependency):
