@@ -82,10 +82,10 @@ async def create_user(
 
 
 @user_router.get(
-    "/users/{id}", status_code=status.HTTP_200_OK, response_model=UserPublic
+    "/users/{user_id}", status_code=status.HTTP_200_OK, response_model=UserPublic
 )
-async def read_user(user_id: ReadUser, db: db_dependency):
-    user = db.query(User).filter(User.id == user_id.id).first()
+async def read_user(user_id: UUID, db: db_dependency):
+    user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist")
 
@@ -101,7 +101,7 @@ async def get_all_users(db: db_dependency):
     return users
 
 
-@user_router.patch("/users/{id}", response_model=UserPublic)
+@user_router.patch("/users/{user_id}", response_model=UserPublic)
 def update_user(user_id: UUID, req: UserUpdate, db: db_dependency):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
@@ -118,10 +118,10 @@ def update_user(user_id: UUID, req: UserUpdate, db: db_dependency):
 
 
 @user_router.delete(
-    "/users/{id}", status_code=status.HTTP_200_OK
+    "/users/{user_id}", status_code=status.HTTP_200_OK
 )
-async def delete_user(user_id: DeleteUser, db: db_dependency):
-    user = db.query(User).filter(User.id == user_id.id)
+async def delete_user(user_id: UUID, db: db_dependency):
+    user = db.query(User).filter(User.id == user_id)
     if not user.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User does not exist")
 
