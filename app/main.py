@@ -43,7 +43,7 @@ db_dependency = Annotated[Session, Depends(get_db)]
 # ]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080", "https://whatspopping.netlify.app/"],
+    allow_origins=["http://localhost:3000", "https://whatspopping.netlify.app/"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
