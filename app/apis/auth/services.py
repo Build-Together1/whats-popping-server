@@ -25,7 +25,6 @@ REFRESH_TOKEN_EXPIRE_MINUTES = settings.REFRESH_TOKEN_EXPIRE_MINUTES
 # oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-
 credentials_exception = CredentialsException(
     status_code=status.HTTP_401_UNAUTHORIZED,
     detail="Could not validate credentials",
@@ -45,7 +44,6 @@ class UserAccount:
         ):
             return user
         return None
-
 
     @staticmethod
     def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
@@ -154,24 +152,18 @@ class UserAccount:
 
         return {"msg": "Logged out successfully"}
 
-
     @staticmethod
     def get_current_user(
-            request: Request,
             db: db_dependency,
             access_token: str = Depends(oauth2_scheme)
     ):
-        token = request.cookies.get("access_token")
-        if token != access_token:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
-
-        blacklisted_token = crud.get_blacklisted_token(db, token)
+        blacklisted_token = crud.get_blacklisted_token(db, access_token)
         if blacklisted_token:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                 detail="You are logged out. Log in to continue.")
 
         try:
-            token_data = UserAccount.decode_token(token=token)
+            token_data = UserAccount.decode_token(token=access_token)
         except ExpiredSignatureError as e:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -264,7 +256,8 @@ class UserAccount:
         template = env.get_template("password_change.html")
         html_body = template.render(username=user.name)
 
-        send_email_background(background_tasks, "A password change on your What's Popping account", account.email_address, html_body)
+        send_email_background(background_tasks, "A password change on your What's Popping account",
+                              account.email_address, html_body)
 
         return {"msg": "Password changed successfully"}
 
@@ -319,7 +312,7 @@ class UserAccount:
         html_body = template.render(username=user.name)
 
         send_email_background(background_tasks, "A password change on your What's Popping account",
-                             user.email_address, html_body)
+                              user.email_address, html_body)
 
         return {"msg": "Password reset successful"}
 
