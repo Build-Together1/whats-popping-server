@@ -44,7 +44,7 @@ async def login_for_access_token(
     #     password=form_data.password
     # )
     if user:
-        return await UserAccount.login_account(user=user)
+        return await UserAccount.login_account(response, user=user)
 
     raise CredentialsException(
         status_code=status.HTTP_401_UNAUTHORIZED,
