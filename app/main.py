@@ -34,17 +34,16 @@ app.include_router(like_router)
 
 
 
-# app.openapi = lambda: custom_openapi(app)
+# app.openapi = Slambda: custom_openapi(app)
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
 # origins = [
 #     "http://localhost:8080",
 # ]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:8080", "https://whatspopping.netlify.app/"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

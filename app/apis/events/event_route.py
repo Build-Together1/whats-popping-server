@@ -22,7 +22,6 @@ event_router = APIRouter(tags=["EVENTS"])
 auth_dependency = Annotated[UserLogin, Depends(UserAccount.get_current_active_user)]
 
 
-
 @event_router.post(
     "/events/", status_code=status.HTTP_201_CREATED
 )
@@ -38,7 +37,7 @@ async def add_event(
     # account = crud.save_account_to_db(user_dict, db)
     event = Events(
         **event_dict,
-        user_id = current_user.id
+        user_id=current_user.id
     )
 
     db.add(event)
@@ -69,7 +68,6 @@ def update_event(event_id: UUID, req: EventUpdate, db: db_dependency, current_us
     event = db.query(Events).filter(Events.id == event_id).first()
     if not event:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Event does not exist")
-
 
     update_data = req.model_dump(exclude_unset=True)
     for field, value in update_data.items():
@@ -207,10 +205,8 @@ async def get_user_with_events_and_likes(user_id: UUID, db: db_dependency):
 async def delete_events(db: db_dependency):
     events = db.query(Events).all()
 
-    for event in  events:
+    for event in events:
         db.delete(event)
     db.commit()
 
     return {"message": "events deleted successfully"}
-
-

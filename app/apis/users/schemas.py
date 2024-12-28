@@ -22,15 +22,16 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     pass
-  
 
-class UserUpdate(UserBase):
+
+class UserUpdate(BaseModel):
     id: UUID4
     name: str | None = None
     profile_header_path: str | None = None
     profile_pic_path: str | None = None
     location: str | None = None
     website: str | None = None
+
 
 class UserPublic(BaseModel):
     id: UUID4
@@ -49,20 +50,13 @@ class UserPublic(BaseModel):
         from_attributes = True
 
 
-
 class ReadUser(BaseModel):
     id: UUID4
+
 
 class DeleteUser(BaseModel):
     id: UUID4
 
+
 class UpdateUser(BaseModel):
     id: UUID4
-
-
-
-
-
-
-
-
