@@ -111,7 +111,7 @@ class UserAccount:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
 
     @staticmethod
-    async def login_account(response: Response, user):
+    async def login_account(user):
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = UserAccount.create_access_token(
             data={
@@ -129,9 +129,9 @@ class UserAccount:
             expires_delta=refresh_token_expires
         )
 
-        # tokens stored as HTTP-only cookies
-        response.set_cookie(key="access_token", value=access_token, httponly=True)
-        response.set_cookie(key="refresh_token", value=refresh_token, httponly=True)
+        # # tokens stored as HTTP-only cookies
+        # response.set_cookie(key="access_token", value=access_token, httponly=True)
+        # response.set_cookie(key="refresh_token", value=refresh_token, httponly=True)
 
         return Token(
             access_token=access_token,
