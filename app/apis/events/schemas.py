@@ -16,8 +16,10 @@ class EventBase(BaseModel):
     event_time: time
     event_location: str
 
+
 class EventCreate(EventBase):
     pass
+
 
 class EventUpdate(EventBase):
     event_name: str | None = None
@@ -28,23 +30,30 @@ class EventUpdate(EventBase):
     event_time: time | None = None
     event_location: str | None = None
 
+
 class ReadEvent(BaseModel):
     id: UUID4
+
 
 class DeleteEvent(BaseModel):
     id: UUID4
 
+
 class UpdateEvent(BaseModel):
     id: UUID4
+
 
 class CommentBase(BaseModel):
     content: str
 
+
 class CommentCreate(CommentBase):
     pass
 
+
 class CommentUpdate(CommentBase):
     content: str | None = None
+
 
 class CommentPublic(BaseModel):
     content: str
@@ -58,6 +67,7 @@ class CommentPublic(BaseModel):
 class LikeCreate(BaseModel):
     event_id: UUID4
 
+
 # Schema for displaying like details
 class LikeResponse(BaseModel):
     user_id: UUID4
@@ -66,6 +76,7 @@ class LikeResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
 
 # Schema for displaying an event with like count
 class EventWithLikes(BaseModel):
@@ -76,6 +87,7 @@ class EventWithLikes(BaseModel):
 
 
 class EventPublic(BaseModel):
+    id: UUID4
     event_name: str
     event_description: str
     event_category: str
