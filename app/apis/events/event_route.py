@@ -47,13 +47,13 @@ async def add_event(
     return event
 
 
-@event_router.post(
+@event_router.get(
     "/events/{event_id}", status_code=status.HTTP_200_OK, response_model=EventPublic
 )
 async def get_event(event_id: UUID, db: db_dependency, current_user: auth_dependency):
     if not current_user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="unauthorized")
-    event = db.query(User).filter(User.id == event_id).first()
+    event = db.query(Events).filter(Events.id == event_id).first()
     if not event:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Event does not exist")
 
