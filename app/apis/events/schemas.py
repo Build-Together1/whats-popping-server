@@ -96,7 +96,7 @@ class EventPublic(BaseModel):
     event_time: time
     event_location: str
     comments: List[CommentPublic] = []
-    likes: EventWithLikes
+    likes: List[EventWithLikes] = []
 
     class Config:
         from_attributes = True

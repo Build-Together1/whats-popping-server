@@ -48,7 +48,9 @@ async def add_event(
 
 
 @event_router.get(
-    "/events/{event_id}", status_code=status.HTTP_200_OK, response_model=EventPublic
+    "/events/{event_id}",
+    status_code=status.HTTP_200_OK,
+    response_model=EventPublic,
 )
 async def get_event(event_id: UUID, db: db_dependency, current_user: auth_dependency):
     if not current_user:
