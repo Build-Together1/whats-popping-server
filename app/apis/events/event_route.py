@@ -175,6 +175,7 @@ async def get_user_with_events_and_likes(user_id: UUID, db: db_dependency):
             # Build event data with likes and comments
             events_with_details.append(
                 EventPublic(
+                    id=event.id,
                     event_name=event_with_comments_and_likes.event_name,
                     event_description=event_with_comments_and_likes.event_description,
                     event_category=event_with_comments_and_likes.event_category,
@@ -184,7 +185,7 @@ async def get_user_with_events_and_likes(user_id: UUID, db: db_dependency):
                     event_location=event_with_comments_and_likes.event_location,
                     comments=[CommentPublic(content=comment.content) for comment in
                               event_with_comments_and_likes.comments],
-                    likes=EventWithLikes(like_count=like_count)  # Add like count here
+                    likes=[EventWithLikes(like_count=like_count)]  # Add like count here
                 )
             )
 
