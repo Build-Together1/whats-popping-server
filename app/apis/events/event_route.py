@@ -147,7 +147,7 @@ async def get_all_events(db: db_dependency):
     return events_with_comments
 
 
-@event_router.get("/events/{user_id}", response_model=UserWithEvents)
+@event_router.get("/user/events/{user_id}", response_model=UserWithEvents)
 async def get_user_with_events_and_likes(user_id: UUID, db: db_dependency):
     # Query User and eagerly load Events, Comments, and Likes relationships
     user = db.query(User).options(
