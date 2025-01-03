@@ -140,7 +140,7 @@ async def get_all_events(db: db_dependency):
         EventPublic(
             **event.__dict__,
             Comments=[CommentPublic(id=comment.id, content=comment.content) for comment in event.comments],
-            likes=EventWithLikes(like_count=len(event.likes))
+            likes=[EventWithLikes(like_count=len(event.likes))]
 
         )
         for event in events
